@@ -38,6 +38,10 @@ children in extension-owned `Agents` tabs by default.
 otherwise legacy Herdr. Core supports ordinary launches, resume, persistent
 specialists and controls, but not managed worktrees, Desktop Agents placement,
 or the legacy sidebar plugin. Its native child tree is not visual parity.
+Core child wrappers expose the assigned name as the display-only terminal label
+`pi.subagent.name` on session start (fresh and resumed children included). This
+label is not an execution ID, ownership proof, or lifecycle signal; use exact
+host-owned IDs for controls. Existing children are not renamed by a parent update.
 Backend/endpoint changes require a Pi restart, not reload. See
 [backend configuration and limits](../../docs/configuration.md#herdr-backend).
 

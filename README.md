@@ -145,6 +145,12 @@ suppression permits removal. Core's own child-completion notes are disabled to
 avoid duplicate results. Uncertain starts never trigger automatic retry or
 model fallback; an observed terminal ID alone does not confer ownership.
 
+On session start, Core children publish their assigned name as the display-only
+terminal label `pi.subagent.name`, including the name passed to `subagent_resume`.
+Desktop mods may read it from `terminals()[i].labels`. This is not a unique
+terminal name, an ownership marker, or automatic Desktop placement. Publication
+is asynchronous and bounded; failure warns in the child without failing its task.
+
 Status labels, the stall watchdog, and no-progress advisories are described in [In-progress status updates](docs/tools.md#in-progress-status-updates) and [Supervision transport](docs/configuration.md#supervision-transport).
 
 ## Tools and commands
@@ -330,7 +336,7 @@ See [Configuration](docs/configuration.md) for every key, the task-model writer,
 - Child agents are real Pi processes running with your user account's permissions, inside Herdr panes or Core terminals. Worktrees isolate Git checkouts, not processes or permissions.
 - The extension creates Herdr panes, tabs and managed worktrees only when a launch asks for them. It never pushes, merges, opens pull requests, deletes branches or removes worktrees on its own; cleanup is an explicit parent action ([worktree cleanup](docs/tools.md#explicit-worktree-cleanup)).
 - What it writes: `$PI_CODING_AGENT_DIR/herdr-agents/config.json` (only through `/subagents-init` or the writer tool, never on startup); per-launch artifacts under the parent session's `artifacts/<session-id>/` directory beside Pi's session store, which hold the child's full task text and any `systemPrompt` as Markdown files, activity snapshots and worktree manifests; the child's own Pi session file; and one [outcome-ledger](docs/configuration.md#outcome-ledger) line per model attempt in `$PI_CODING_AGENT_DIR/herdr-agents/outcomes.jsonl` (turn it off with `outcomeLedger: false`). An accept check is a shell command the parent itself also runs, with your permissions, in the child's checkout. A managed worktree that carries its own `.pi/agent` directory receives that child's session inside the checkout. Treat task text as potentially sensitive when you share or inspect those files.
-- Managed worktree children record their PID, process start time, boot ID, and PID namespace in `<session>.process.json` beside their session. Inside legacy Herdr, the parent reads each child pane's agent session from Herdr and reports one display-only [sidebar marker](docs/configuration.md#sidebar-markers), the pane token `piha_delegated_v1`, on that pane through the Herdr socket. It writes no other pane metadata.
+- Managed worktree children record their PID, process start time, boot ID, and PID namespace in `<session>.process.json` beside their session. Inside legacy Herdr, the parent reads each child pane's agent session from Herdr and reports one display-only [sidebar marker](docs/configuration.md#sidebar-markers), the pane token `piha_delegated_v1`, on that pane through the Herdr socket. It writes no other legacy pane metadata. A Core child's terminal wrapper also publishes its assigned name to its own `pi.subagent.name` label; this display-only label is not used to adopt, control, or clean up terminals.
 - To uninstall: first list and remove any retained worktrees while the extension is still loaded (`/worktree list`, then `/worktree remove <target>`), because those commands leave with the package. If you installed the optional sidebar plugin, remove it with `herdr plugin uninstall pi-herdr-agents.sidebar` (or `herdr plugin unlink` for a linked copy). Then run `pi remove npm:pi-herdr-agents`, and delete `$PI_CODING_AGENT_DIR/herdr-agents/` and the `artifacts/` directories above if you no longer want the configuration and launch records.
 
 ## Troubleshooting
