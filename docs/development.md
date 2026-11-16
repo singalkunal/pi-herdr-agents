@@ -30,9 +30,12 @@ Desktop presentation is separate and not yet implemented.
   the terminal presentation hooks: the widget and status refresh with
   `borderLine`, the message renderers, and the per-tool `renderCall`/
   `renderResult` callbacks the factory injects into tool definitions.
-- `pi-extension/subagents/child.ts`, `child-widget.ts` — the terminal child
-  wrapper: the package child protocol (`createChildExtension` from
-  `@nubl/maestro/pi/child`) plus its tools widget.
+- `pi-extension/subagents/child.ts`, `child-widget.ts`, `core-display-name.ts` —
+  the terminal child wrapper: the package child protocol (`createChildExtension`
+  from `@nubl/maestro/pi/child`), its tools widget, and bounded asynchronous
+  publication of its own display-only Core `pi.subagent.name` label. The label
+  publisher is an explicit host bridge to the existing Core RPC transport;
+  it changes no engine module, launch transaction, ownership, or lifecycle.
 - `maestro/adapters/pi/child/subagent-done.ts` — the child path launches pass
   and old session policies name. It re-exports the package child protocol and
   defaults to `child.ts`, so existing launch artifacts keep resolving.

@@ -86,6 +86,15 @@ The host confirms exit independently of agent status and removes the retained
 record after delivery or suppression. A crashed parent can leave children alive;
 no new parent adopts those terminals by name.
 
+The terminal-host child wrapper publishes `PI_SUBAGENT_NAME` to its own Core
+terminal as the label `pi.subagent.name` at session start. Fresh, forked, resumed,
+and persistent children use the same wrapper. This needs no configuration and
+does not reserve Core's unique `name` field. Mods may use the label for display;
+never use it as ownership or completion evidence. Existing unlabeled children
+are not backfilled by updating the parent alone. The optional RPC has a 1.5-second
+bound, runs without blocking task startup, and warns on failure without retrying
+or changing lifecycle state. Legacy contexts and non-child sessions do not write it.
+
 **Not supported on Core:** managed worktree launch/handoff/inventory/removal,
 remote terminals, Desktop `Agents` grouping, and the legacy sidebar plugin.
 Ordinary `cwd` may still point at an existing checkout. `panes.*` settings apply

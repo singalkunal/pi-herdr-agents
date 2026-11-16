@@ -691,6 +691,18 @@ async function planResponse(request: ChatRequest): Promise<ResponsePlan> {
 
 	if (lastRole === "tool") return { text: "completed" };
 
+	// This fixture resumes the same conversation. Use the current task artifact,
+	// not an echo command from its earlier turn in the accumulated transcript.
+	if (
+		names.has("bash") &&
+		user.trim().startsWith("<file ") &&
+		user.includes("\nINTEGRATION_CORE_DISPLAY_NAME\n")
+	) {
+		const command = bashCommand(user);
+		if (command)
+			return { toolCalls: [{ name: "bash", arguments: { command } }] };
+	}
+
 	if (
 		names.has("subagent_resume") &&
 		!/Session "[^"]+" resumed\./.test(source)

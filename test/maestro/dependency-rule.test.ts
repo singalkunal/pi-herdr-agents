@@ -187,6 +187,10 @@ function isForbiddenEdge(root: string, reference: ModuleReference) {
 			"pi-extension/subagents/marker-transport.ts",
 			["../../maestro/surfaces/herdr/herdr-socket.ts"],
 		],
+		[
+			"pi-extension/subagents/core-display-name.ts",
+			["../../maestro/surfaces/herdr/herdr-core-protocol.ts"],
+		],
 		["pi-extension/subagents/child.ts", ["@nubl/maestro/pi/child"]],
 		["pi-extension/subagents/child-widget.ts", ["@nubl/maestro/pi/child"]],
 		[
